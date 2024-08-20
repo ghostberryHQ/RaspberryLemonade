@@ -11,6 +11,9 @@ struct ContentView: View {
     @StateObject private var healthManager = HealthManager()
     @StateObject private var petRock: PetRock
     
+    @State private var showingRenameAlert = false
+    @State private var newRockName = ""
+    
     init() {
         let healthManager = HealthManager()
         _healthManager = StateObject(wrappedValue: healthManager)
@@ -23,6 +26,19 @@ struct ContentView: View {
                 Text("Meet \(petRock.name)!")
                     .font(.largeTitle)
                     .padding()
+                    .onTapGesture {
+                        newRockName = petRock.name  // Prepopulate with the current name
+                        showingRenameAlert = true
+                    }
+                    .alert("Rename Your Rock", isPresented: $showingRenameAlert) {
+                        TextField("Rock Name", text: $newRockName)
+                        Button("Save") {
+                            petRock.name = newRockName
+                        }
+                        Button("Cancel", role: .cancel) { }
+                    } message: {
+                        Text("Enter a new name for your rock.")
+                    }
                 
                 Text("Level: \(petRock.level)")
                     .font(.title2)
@@ -59,7 +75,7 @@ struct ContentView: View {
                 }
                 .padding()
                 
-                NavigationLink(destination: MapView()) {
+                NavigationLink(destination: MultipeerView()) {
                     Text("Show Nearby Rocks")
                         .padding()
                         .background(Color.orange)
@@ -67,6 +83,7 @@ struct ContentView: View {
                         .cornerRadius(8)
                 }
             }
+            .padding()
         }
     }
 }

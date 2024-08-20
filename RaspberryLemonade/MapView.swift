@@ -26,10 +26,14 @@ struct MapView: View {
             }
             .position(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY)
             
-            // Represent the nearby device's rock
+            // Represent the nearby device's rock with distance in meters
             ForEach(nearbyInteractionManager.positions.indices, id: \.self) { index in
+                let distance = nearbyInteractionManager.nearbyRocks[index].distance ?? 0.0
                 VStack {
                     Text("Rock \(index + 1)")
+                        .foregroundColor(.white)
+                        .padding(.bottom, 1)
+                    Text(String(format: "%.2f meters", distance))
                         .foregroundColor(.white)
                         .padding(.bottom, 5)
                     Circle()
